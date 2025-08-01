@@ -9,6 +9,7 @@ export default function IndexScreen() {
   const router = useRouter();
   const { user, isAuthenticated, initialize, isLoading } = useAuthStore();
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -16,8 +17,10 @@ export default function IndexScreen() {
         console.log('Starting auth initialization...');
         await initialize();
         console.log('Auth initialization completed');
+        setInitError(null);
       } catch (error) {
         console.error('Failed to initialize auth:', error);
+        setInitError(error instanceof Error ? error.message : 'Failed to initialize');
       } finally {
         setHasInitialized(true);
       }
@@ -27,7 +30,7 @@ export default function IndexScreen() {
   }, [initialize]);
 
   useEffect(() => {
-    if (hasInitialized && !isLoading) {
+    if (hasInitialized && !isLoading && !initError) {
       console.log('Index screen - Routing decision:', { 
         isAuthenticated, 
         userEmail: user?.email, 
@@ -36,29 +39,67 @@ export default function IndexScreen() {
       });
       
       // Small delay to ensure all state updates are complete
-      setTimeout(() => {
-        if (isAuthenticated && user) {
-          // Check if user has selected location
-          if (!user.location) {
-            console.log('User authenticated but no location, redirecting to location selection');
-            router.replace('/location');
-          } else {
-            // Route based on user role
-            if (user.role === 'admin') {
-              console.log('Redirecting admin user to admin dashboard');
-              router.replace('/(admin)');
+      const timeoutId = setTimeout(() => {
+        try {
+          if (isAuthenticated && user) {
+            // Check if user has selected location
+            if (!user.location) {
+              console.log('User authenticated but no location, redirecting to location selection');
+              router.replace('/location');
             } else {
-              console.log('Redirecting customer user to customer dashboard');
-              router.replace('/(customer)');
+              // Route based on user role
+              if (user.role === 'admin') {
+                console.log('Redirecting admin user to admin dashboard');
+                router.replace('/(admin)');
+              } else {
+                console.log('Redirecting customer user to customer dashboard');
+                router.replace('/(customer)');
+              }
             }
+          } else {
+            console.log('User not authenticated, redirecting to login');
+            router.replace('/login');
           }
-        } else {
-          console.log('User not authenticated, redirecting to login');
+        } catch (error) {
+          console.error('Navigation error:', error);
           router.replace('/login');
         }
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [isAuthenticated, user, isLoading, hasInitialized, router]);
+  }, [isAuthenticated, user, isLoading, hasInitialized, initError, router]);
+
+  // Show error screen if initialization failed
+  if (initError) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <View style={{ 
+          flex: 1, 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          gap: 16,
+          padding: 20
+        }}>
+          <Text style={{ 
+            color: colors.error || colors.text, 
+            fontSize: 18,
+            fontWeight: '600',
+            textAlign: 'center'
+          }}>
+            Initialization Failed
+          </Text>
+          <Text style={{ 
+            color: colors.textSecondary || colors.text, 
+            fontSize: 14,
+            textAlign: 'center'
+          }}>
+            {initError}
+          </Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // Show loading screen while initializing
   if (!hasInitialized || isLoading) {
