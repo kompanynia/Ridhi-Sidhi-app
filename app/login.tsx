@@ -96,10 +96,7 @@ export default function LoginScreen() {
     router.push('/signup');
   };
 
-  const fillAdminCredentials = () => {
-    setEmail('namaj360@gmail.com');
-    setPassword('12345');
-  };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,18 +110,7 @@ export default function LoginScreen() {
             <Text style={styles.subtitle}>Login to your account</Text>
           </View>
           
-          <View style={styles.credentialsInfo}>
-            <Text style={styles.credentialsTitle}>Quick Login:</Text>
-            <TouchableOpacity 
-              style={styles.adminButton}
-              onPress={fillAdminCredentials}
-            >
-              <Text style={styles.adminButtonText}>Fill Admin Credentials</Text>
-            </TouchableOpacity>
-            <Text style={styles.credentialsNote}>
-              Admin: admin123@gmail.com / admin123
-            </Text>
-          </View>
+
           
           <View style={styles.form}>
             {(error || validationError) && (
@@ -248,36 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textLight,
   },
-  credentialsInfo: {
-    backgroundColor: colors.card,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 24,
-  },
-  credentialsTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-    marginBottom: 12,
-  },
-  adminButton: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 6,
-    marginBottom: 8,
-  },
-  adminButtonText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  credentialsNote: {
-    fontSize: 12,
-    color: colors.textLight,
-    marginBottom: 4,
-  },
+
   form: {
     marginBottom: 24,
   },
