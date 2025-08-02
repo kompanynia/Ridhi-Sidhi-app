@@ -18,7 +18,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
   
   // Try to use tRPC if backend is configured, with fallback to zustand store
   const trendingQuery = isBackendConfigured() ? trpc.trending.get.useQuery(undefined, {
-    retry: false,
     refetchOnWindowFocus: false
   }) : { data: null, error: null };
   
@@ -33,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
   
   // Use tRPC data if available and successful, otherwise fall back to local state
   const isProductTrending = (trendingQuery.data && !trendingQuery.error) 
-    ? trendingQuery.data.some(trendingProduct => trendingProduct.id === product.id)
+    ? trendingQuery.data.some((trendingProduct: any) => trendingProduct.id === product.id)
     : isTrending(product.id);
 
   return (

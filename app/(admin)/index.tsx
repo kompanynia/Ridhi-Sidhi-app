@@ -23,7 +23,6 @@ export default function AdminDashboardScreen() {
   
   // Only use tRPC if backend is configured
   const trendingQuery = isBackendConfigured() ? trpc.trending.get.useQuery(undefined, {
-    retry: false,
     refetchOnWindowFocus: false
   }) : { data: [] };
   const updateTrendingMutation = isBackendConfigured() ? trpc.trending.update.useMutation() : null;
