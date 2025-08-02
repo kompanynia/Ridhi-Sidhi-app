@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, TextInput, Pressable } from 'react-native';
-import { Search, X } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 
 interface SearchBarProps {
@@ -22,7 +22,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <View style={styles.container}>
-      <Search size={20} color={colors.textLight} style={styles.icon} />
+      <Ionicons name="search" size={20} color={colors.textLight} style={styles.icon} />
       <TextInput
         style={styles.input}
         value={value}
@@ -34,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       />
       {value.length > 0 && (
         <Pressable onPress={handleClear} style={styles.clearButton}>
-          <X size={18} color={colors.textLight} />
+          <Ionicons name="close" size={18} color={colors.textLight} />
         </Pressable>
       )}
     </View>

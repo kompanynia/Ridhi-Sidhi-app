@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Home, Package, ClipboardList } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 
 export default function AdminTabLayout() {
@@ -26,7 +26,7 @@ export default function AdminTabLayout() {
         options={{
           title: 'Dashboard',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size || 24} color={color} />
+            <Ionicons name="home" size={size || 24} color={color} />
           ),
         }}
       />
@@ -35,7 +35,7 @@ export default function AdminTabLayout() {
         options={{
           title: 'Products',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size || 24} color={color} />
+            <Ionicons name="cube" size={size || 24} color={color} />
           ),
         }}
       />
@@ -44,7 +44,7 @@ export default function AdminTabLayout() {
         options={{
           title: 'Orders',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size || 24} color={color} />
+            <Ionicons name="clipboard" size={size || 24} color={color} />
           ),
         }}
       />

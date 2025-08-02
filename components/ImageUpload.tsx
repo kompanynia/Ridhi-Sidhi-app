@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import { Upload, X, Camera, Image as ImageIcon } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
@@ -402,12 +402,12 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
         <View style={styles.imageContainer}>
           <Image source={{ uri: value }} style={styles.previewImage} />
           <TouchableOpacity style={styles.removeButton} onPress={removeImage}>
-            <X size={20} color={colors.white} />
+            <Ionicons name="close" size={20} color={colors.white} />
           </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.uploadArea}>
-          <Upload size={40} color={colors.textLight} />
+          <Ionicons name="cloud-upload" size={40} color={colors.textLight} />
           <Text style={styles.uploadText}>Upload Product Image</Text>
           <Text style={styles.uploadSubtext}>JPG, PNG, WEBP up to 10MB</Text>
         </View>
@@ -421,7 +421,7 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
           size="small"
           loading={isUploading}
           style={styles.uploadButton}
-          icon={<ImageIcon size={16} color={colors.primary} />}
+          icon={<Ionicons name="image" size={16} color={colors.primary} />}
         />
         
         {Platform.OS !== 'web' && (
@@ -432,7 +432,7 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
             size="small"
             loading={isUploading}
             style={styles.uploadButton}
-            icon={<Camera size={16} color={colors.primary} />}
+            icon={<Ionicons name="camera" size={16} color={colors.primary} />}
           />
         )}
         

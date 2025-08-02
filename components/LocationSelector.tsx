@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Pressable } from 'react-native';
-import { MapPin } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Location } from '@/types';
 import { colors } from '@/constants/colors';
 
@@ -30,7 +30,8 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
             ]}
             onPress={() => onSelectLocation(location)}
           >
-            <MapPin 
+            <Ionicons 
+              name="location" 
               size={20} 
               color={selectedLocation === location ? colors.white : colors.primary} 
               style={styles.icon}

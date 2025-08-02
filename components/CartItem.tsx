@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable, TextInput } from 'react-native';
-import { Minus, Plus, Trash2 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { CartItem as CartItemType, calculateDiscountedPrice } from '@/types';
 import { colors } from '@/constants/colors';
 
@@ -91,7 +91,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({
             onPress={handleRemove} 
             style={({ pressed }) => [styles.removeButton, pressed && { opacity: 0.7 }]}
           >
-            <Trash2 size={18} color={colors.error} />
+            <Ionicons name="trash" size={18} color={colors.error} />
           </Pressable>
         </View>
         
@@ -108,7 +108,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({
               onPress={handleDecrement}
               style={({ pressed }) => [styles.quantityButton, pressed && { opacity: 0.7 }]}
             >
-              <Minus size={16} color={colors.text} />
+              <Ionicons name="remove" size={16} color={colors.text} />
             </Pressable>
             
             {isEditing ? (
@@ -132,7 +132,7 @@ export const CartItemComponent: React.FC<CartItemProps> = ({
               onPress={handleIncrement}
               style={({ pressed }) => [styles.quantityButton, pressed && { opacity: 0.7 }]}
             >
-              <Plus size={16} color={colors.text} />
+              <Ionicons name="add" size={16} color={colors.text} />
             </Pressable>
           </View>
         </View>

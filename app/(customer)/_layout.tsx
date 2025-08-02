@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Home, ShoppingCart, User, ClipboardList } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { useCartStore } from '@/stores/cartStore';
 
@@ -30,7 +30,7 @@ export default function CustomerTabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size} color={color} />
+            <Ionicons name="home" size={size} color={color} />
           ),
         }}
       />
@@ -39,7 +39,7 @@ export default function CustomerTabLayout() {
         options={{
           title: 'Cart',
           tabBarIcon: ({ color, size }) => (
-            <ShoppingCart size={size} color={color} />
+            <Ionicons name="cart" size={size} color={color} />
           ),
           tabBarBadge: cartItemCount > 0 ? cartItemCount : undefined,
         }}
@@ -49,7 +49,7 @@ export default function CustomerTabLayout() {
         options={{
           title: 'My Orders',
           tabBarIcon: ({ color, size }) => (
-            <ClipboardList size={size} color={color} />
+            <Ionicons name="clipboard" size={size} color={color} />
           ),
         }}
       />
@@ -58,7 +58,7 @@ export default function CustomerTabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <User size={size} color={color} />
+            <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />

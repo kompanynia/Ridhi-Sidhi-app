@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Pressable, Alert, Modal, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Package, ClipboardList, LogOut, MapPin, TrendingUp, X, Check } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { useAuthStore } from '@/stores/authStore';
 import { useProductStore } from '@/stores/productStore';
@@ -112,7 +112,7 @@ export default function AdminDashboardScreen() {
           <Text style={styles.trendingProductCompany} numberOfLines={1}>{item.company}</Text>
         </View>
         {isSelected && (
-          <Check size={20} color={colors.primary} />
+          <Ionicons name="checkmark" size={20} color={colors.primary} />
         )}
       </Pressable>
     );
@@ -133,7 +133,7 @@ export default function AdminDashboardScreen() {
             ]}
             onPress={handleLogout}
           >
-            <LogOut size={20} color={colors.text} />
+            <Ionicons name="log-out" size={20} color={colors.text} />
           </Pressable>
         </View>
         
@@ -142,7 +142,7 @@ export default function AdminDashboardScreen() {
             style={styles.statCard}
             onPress={navigateToProducts}
           >
-            <Package size={24} color={colors.primary} />
+            <Ionicons name="cube" size={24} color={colors.primary} />
             <Text style={styles.statValue}>{products.length}</Text>
             <Text style={styles.statLabel}>Products</Text>
           </Pressable>
@@ -151,7 +151,7 @@ export default function AdminDashboardScreen() {
             style={styles.statCard}
             onPress={navigateToOrders}
           >
-            <ClipboardList size={24} color={colors.primary} />
+            <Ionicons name="clipboard" size={24} color={colors.primary} />
             <Text style={styles.statValue}>{orders.length}</Text>
             <Text style={styles.statLabel}>Total Orders</Text>
           </Pressable>
@@ -162,7 +162,7 @@ export default function AdminDashboardScreen() {
         <View style={styles.locationStatsContainer}>
           <View style={styles.locationCard}>
             <View style={styles.locationHeader}>
-              <MapPin size={20} color={colors.primary} />
+              <Ionicons name="location" size={20} color={colors.primary} />
               <Text style={styles.locationName}>Udaipur</Text>
             </View>
             <Text style={styles.locationValue}>{udaipurOrders.length}</Text>
@@ -171,7 +171,7 @@ export default function AdminDashboardScreen() {
           
           <View style={styles.locationCard}>
             <View style={styles.locationHeader}>
-              <MapPin size={20} color={colors.primary} />
+              <Ionicons name="location" size={20} color={colors.primary} />
               <Text style={styles.locationName}>Mungana</Text>
             </View>
             <Text style={styles.locationValue}>{munganaOrders.length}</Text>
@@ -200,7 +200,7 @@ export default function AdminDashboardScreen() {
             style={[styles.actionButton, styles.trendingButton]}
             onPress={() => setShowTrendingModal(true)}
           >
-            <TrendingUp size={20} color={colors.white} />
+            <Ionicons name="trending-up" size={20} color={colors.white} />
             <Text style={styles.actionText}>Manage Trending Products</Text>
           </Pressable>
         </View>
@@ -228,7 +228,7 @@ export default function AdminDashboardScreen() {
               onPress={() => setShowTrendingModal(false)}
               style={styles.closeButton}
             >
-              <X size={24} color={colors.text} />
+              <Ionicons name="close" size={24} color={colors.text} />
             </Pressable>
           </View>
           

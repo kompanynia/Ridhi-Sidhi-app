@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { TrendingUp } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Product, calculateDiscountedPrice } from '@/types';
 import { colors } from '@/constants/colors';
 import { trpc, isBackendConfigured } from '@/lib/trpc';
@@ -63,7 +63,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
         )}
         {isProductTrending && (
           <View style={[styles.trendingBadge, hasDiscount && styles.trendingBadgeWithDiscount]}>
-            <TrendingUp size={12} color={colors.white} />
+            <Ionicons name="trending-up" size={12} color={colors.white} />
           </View>
         )}
       </View>

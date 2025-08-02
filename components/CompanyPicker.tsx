@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Pressable, Modal, FlatList, TextInput } from 'react-native';
-import { ChevronDown, Plus, Check } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
 
@@ -74,7 +74,7 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
         {item}
       </Text>
       {value === item && (
-        <Check size={16} color={colors.primary} />
+        <Ionicons name="checkmark" size={16} color={colors.primary} />
       )}
     </Pressable>
   );
@@ -93,7 +93,7 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
         ]}>
           {value || placeholder}
         </Text>
-        <ChevronDown size={20} color={colors.textLight} />
+        <Ionicons name="chevron-down" size={20} color={colors.textLight} />
       </Pressable>
 
       <Modal
@@ -132,7 +132,7 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
                 style={styles.createOption}
                 onPress={handleCreateCompany}
               >
-                <Plus size={16} color={colors.primary} />
+                <Ionicons name="add" size={16} color={colors.primary} />
                 <Text style={styles.createOptionText}>
                   Create "{searchText}"
                 </Text>
