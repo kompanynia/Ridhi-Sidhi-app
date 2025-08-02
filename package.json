@@ -7,7 +7,7 @@
     "start-web": "bunx rork start -p xfcmvrdbt04s7iesuk69v --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rork start -p xfcmvrdbt04s7iesuk69v --web --tunnel"
   },
- {
+ 
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@hono/trpc-server": "^0.4.0",
