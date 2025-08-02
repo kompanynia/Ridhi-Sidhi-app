@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.rork.shopeasy-mobile-app",
+      "bundleIdentifier": "app.rork.shopeasymobileapp",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
@@ -27,7 +27,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "app.rork.shopeasy-mobile-app",
+      "package": "app.rork.shopeasymobileapp",
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
