@@ -7,13 +7,7 @@
     "start-web": "bunx rork start -p xfcmvrdbt04s7iesuk69v --web --tunnel",
     "start-web-dev": "DEBUG=expo* bunx rork start -p xfcmvrdbt04s7iesuk69v --web --tunnel"
   },
-  "expo": {
-    "doctor": {
-      "reactNativeDirectoryCheck": {
-        "listUnknownPackages": false
-      }
-    }
-  },
+ 
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@hono/trpc-server": "^0.4.0",
@@ -46,8 +40,8 @@
     "hono": "^4.8.2",
     "lucide-react-native": "^0.447.0",
     "nativewind": "^4.1.23",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-native": "0.79.5",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-pager-view": "6.7.1",
@@ -64,8 +58,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@expo/ngrok": "^4.1.0",
-    "@types/react": "~19.0.10",
+    "@types/react": "18.3.12",
     "typescript": "~5.8.3"
-  },
-  "private": true
+  }
 }
