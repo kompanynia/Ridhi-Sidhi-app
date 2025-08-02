@@ -32,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, compact = fal
   
   // Use tRPC data if available and successful, otherwise fall back to local state
   const isProductTrending = (trendingQuery.data && !trendingQuery.error) 
-    ? trendingQuery.data.some((trendingProduct: any) => trendingProduct.id === product.id)
+    ? trendingQuery.data.some((trendingProduct: { id: string }) => trendingProduct.id === product.id)
     : isTrending(product.id);
 
   return (
