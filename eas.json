@@ -3,6 +3,21 @@
     "version": ">= 5.2.0"
   },
   "build": {
+    "development": {
+      "android": {
+        "buildType": "apk",
+        "developmentClient": true,
+        "distribution": "internal",
+        "gradleCommand": ":app:assembleDebug",
+        "env": {
+          "APP_VARIANT": "development"
+        }
+      },
+      "ios": {
+        "developmentClient": true,
+        "distribution": "internal"
+      }
+    },
     "preview": {
       "android": {
         "buildType": "apk",
@@ -10,10 +25,10 @@
         "gradleCommand": ":app:assembleRelease",
         "env": {
           "EXPO_NO_DOTENV": "1"
-        },
-        "cache": {
-          "key": "preview-v1"
         }
+      },
+      "ios": {
+        "distribution": "internal"
       }
     },
     "production": {
@@ -22,7 +37,13 @@
         "env": {
           "EXPO_NO_DOTENV": "1"
         }
+      },
+      "ios": {
+        "distribution": "store"
       }
     }
+  },
+  "submit": {
+    "production": {}
   }
 }
