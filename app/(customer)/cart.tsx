@@ -110,7 +110,7 @@ export default function CartScreen() {
         {returnTo && (
           <Pressable 
             style={styles.backButton} 
-            onPress={() => router.push(returnTo)}
+            onPress={() => router.back()}
           >
             <AntDesign name="arrowleft" size={20} color={colors.text} />
           </Pressable>
