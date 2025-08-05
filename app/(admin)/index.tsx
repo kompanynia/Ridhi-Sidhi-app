@@ -17,7 +17,7 @@ export default function AdminDashboardScreen() {
   const { user, logout } = useAuthStore();
   const { products, fetchProducts } = useProductStore();
   const { orders, fetchOrders } = useCartStore();
-  const { trendingProductIds, setTrendingProducts, loadTrendingProducts, isLoading: trendingLoading } = useTrendingStore();
+  const { trendingProductIds, setTrendingProducts, loadTrendingProducts } = useTrendingStore();
   const [showTrendingModal, setShowTrendingModal] = useState(false);
   const [selectedTrendingProducts, setSelectedTrendingProducts] = useState<string[]>([]);
   
@@ -25,7 +25,7 @@ export default function AdminDashboardScreen() {
   const trendingQuery = isBackendConfigured() ? trpc.trending.get.useQuery(undefined, {
     refetchOnWindowFocus: false
   }) : { data: [] };
-  const updateTrendingMutation = isBackendConfigured() ? trpc.trending.update.useMutation() : null;
+
   
   useEffect(() => {
     fetchProducts();

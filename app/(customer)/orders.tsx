@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable, RefreshControl, Alert, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MapPin, ChevronRight, Package, Download } from 'lucide-react-native';
+import { AntDesign, Feather, Entypo } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -115,7 +115,7 @@ export default function CustomerOrdersScreen() {
           <View style={styles.orderInfo}>
             <Text style={styles.orderAmount}>₹{item.totalAmount.toFixed(2)}</Text>
             <View style={styles.itemInfo}>
-              <Package size={14} color={colors.textLight} />
+              <Feather name="package" size={14} color={colors.textLight} />
               <Text style={styles.orderItemCount}>
                 {item.items.length} {item.items.length === 1 ? 'item' : 'items'}
               </Text>
@@ -123,7 +123,7 @@ export default function CustomerOrdersScreen() {
           </View>
           
           <View style={styles.locationContainer}>
-            <MapPin size={16} color={colors.primary} style={styles.locationIcon} />
+            <Entypo name="location-pin" size={16} color={colors.primary} style={styles.locationIcon} />
             <Text style={styles.locationText}>{item.location}</Text>
           </View>
         </View>
@@ -139,12 +139,12 @@ export default function CustomerOrdersScreen() {
           style={styles.downloadButton}
           onPress={(event) => handleDownloadPDF(item, event)}
         >
-          <Download size={14} color={colors.primary} />
+          <AntDesign name="download" size={14} color={colors.primary} />
           <Text style={styles.downloadText}>PDF</Text>
         </Pressable>
       </View>
       
-      <ChevronRight size={20} color={colors.textLight} />
+      <AntDesign name="right" size={20} color={colors.textLight} />
     </Pressable>
   );
 
@@ -170,7 +170,7 @@ export default function CustomerOrdersScreen() {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Package size={48} color={colors.textLight} />
+            <Feather name="package" size={48} color={colors.textLight} />
             <Text style={styles.emptyTitle}>No orders yet</Text>
             <Text style={styles.emptyText}>
               Start shopping to see your orders here

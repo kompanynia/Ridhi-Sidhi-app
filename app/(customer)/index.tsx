@@ -10,7 +10,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useTrendingStore } from '@/stores/trendingStore';
 import { trpc, isBackendConfigured } from '@/lib/trpc';
 import { Product, calculateDiscountedPrice, getDiscountAmount } from '@/types';
-import { ArrowLeft, TrendingUp, X, FileDown } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
@@ -32,7 +32,6 @@ export default function HomeScreen() {
   
   // Try to use tRPC if backend is configured, with fallback to zustand store
   const trendingQuery = isBackendConfigured() ? trpc.trending.get.useQuery(undefined, {
-    retry: false,
     refetchOnWindowFocus: false
   }) : { data: null, isLoading: false, error: null };
   
@@ -274,11 +273,11 @@ export default function HomeScreen() {
       {showProducts && (
         <View style={styles.header}>
           <Pressable style={styles.backButton} onPress={handleBackToCompanies}>
-            <ArrowLeft size={24} color={colors.text} />
+            <AntDesign name="arrowleft" size={24} color={colors.text} />
           </Pressable>
           <Text style={styles.headerTitle}>{selectedCompany}</Text>
           <Pressable style={styles.pdfButton} onPress={handleDownloadCompanyPDF}>
-            <FileDown size={20} color={colors.primary} />
+            <AntDesign name="download" size={20} color={colors.primary} />
           </Pressable>
         </View>
       )}
@@ -288,14 +287,14 @@ export default function HomeScreen() {
         <View style={styles.trendingBanner}>
           <View style={styles.trendingHeader}>
             <View style={styles.trendingTitleContainer}>
-              <TrendingUp size={20} color={colors.primary} />
+              <AntDesign name="linechart" size={20} color={colors.primary} />
               <Text style={styles.trendingTitle}>Trending Products</Text>
             </View>
             <Pressable 
               onPress={() => setShowTrendingBanner(false)}
               style={styles.closeBanner}
             >
-              <X size={18} color={colors.textLight} />
+              <AntDesign name="close" size={18} color={colors.textLight} />
             </Pressable>
           </View>
           <ScrollView 

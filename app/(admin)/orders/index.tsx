@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable, RefreshControl, Alert, Platform } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MapPin, ChevronRight, Package, Clock, CheckCircle, XCircle, ClipboardList, Download } from 'lucide-react-native';
+import { AntDesign, Feather, Entypo } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import { useCartStore } from '@/stores/cartStore';
 import { generateAndDownloadPDF } from '@/utils/invoice';
@@ -77,11 +77,11 @@ export default function AdminOrdersScreen() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle size={16} color={colors.success} />;
+        return <AntDesign name="checkcircle" size={16} color={colors.success} />;
       case 'cancelled':
-        return <XCircle size={16} color={colors.error} />;
+        return <AntDesign name="closecircle" size={16} color={colors.error} />;
       default:
-        return <Clock size={16} color={colors.secondary} />;
+        return <Feather name="clock" size={16} color={colors.secondary} />;
     }
   };
 
@@ -136,7 +136,7 @@ export default function AdminOrdersScreen() {
           <View style={styles.orderInfo}>
             <Text style={styles.orderAmount}>₹{item.totalAmount.toFixed(2)}</Text>
             <View style={styles.itemInfo}>
-              <Package size={14} color={colors.textLight} />
+              <Feather name="package" size={14} color={colors.textLight} />
               <Text style={styles.orderItemCount}>
                 {item.items.length} {item.items.length === 1 ? 'item' : 'items'}
               </Text>
@@ -144,7 +144,7 @@ export default function AdminOrdersScreen() {
           </View>
           
           <View style={styles.locationContainer}>
-            <MapPin size={16} color={colors.primary} style={styles.locationIcon} />
+            <Entypo name="location-pin" size={16} color={colors.primary} style={styles.locationIcon} />
             <Text style={styles.locationText}>{item.location}</Text>
           </View>
         </View>
@@ -167,7 +167,7 @@ export default function AdminOrdersScreen() {
           style={styles.downloadButton}
           onPress={(event) => handleDownloadPDF(item, event)}
         >
-          <Download size={16} color={colors.primary} />
+          <AntDesign name="download" size={16} color={colors.primary} />
           <Text style={styles.downloadText}>Download PDF</Text>
         </Pressable>
       </Pressable>
@@ -216,7 +216,7 @@ export default function AdminOrdersScreen() {
         options={{
           title: 'Orders',
           headerLeft: () => (
-            <ClipboardList size={24} color={colors.primary} style={{ marginLeft: 8 }} />
+            <Feather name="clipboard" size={24} color={colors.primary} style={{ marginLeft: 8 }} />
           ),
         }} 
       />
@@ -297,7 +297,7 @@ export default function AdminOrdersScreen() {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Package size={48} color={colors.textLight} />
+            <Feather name="package" size={48} color={colors.textLight} />
             <Text style={styles.emptyTitle}>No orders found</Text>
             <Text style={styles.emptyText}>
               {selectedLocation 

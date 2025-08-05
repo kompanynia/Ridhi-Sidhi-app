@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable, Image, Alert } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Plus, Edit, Trash2, Package } from 'lucide-react-native';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { SearchBar } from '@/components/SearchBar';
 import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
@@ -90,7 +90,7 @@ export default function ProductsScreen() {
           ]}
           onPress={() => handleEditProduct(item.id)}
         >
-          <Edit size={18} color={colors.primary} />
+          <AntDesign name="edit" size={18} color={colors.primary} />
         </Pressable>
         
         <Pressable 
@@ -101,7 +101,7 @@ export default function ProductsScreen() {
           ]}
           onPress={() => handleDeleteProduct(item.id)}
         >
-          <Trash2 size={18} color={colors.error} />
+          <AntDesign name="delete" size={18} color={colors.error} />
         </Pressable>
       </View>
     </View>
@@ -113,7 +113,7 @@ export default function ProductsScreen() {
         options={{
           title: 'Products',
           headerLeft: () => (
-            <Package size={24} color={colors.primary} style={{ marginLeft: 8 }} />
+            <Feather name="package" size={24} color={colors.primary} style={{ marginLeft: 8 }} />
           ),
         }} 
       />
@@ -129,7 +129,7 @@ export default function ProductsScreen() {
           style={styles.addButton}
           onPress={handleAddProduct}
         >
-          <Plus size={24} color={colors.white} />
+          <AntDesign name="plus" size={24} color={colors.white} />
         </Pressable>
       </View>
       

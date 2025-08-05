@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, Switch, Alert, KeyboardAvoidingView, Platform, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Edit } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { CompanyPicker } from '@/components/CompanyPicker';
@@ -339,7 +339,7 @@ export default function EditProductScreen() {
           options={{
             title: 'Edit Product',
             headerLeft: () => (
-              <Edit size={24} color={colors.primary} style={{ marginLeft: 8 }} />
+              <AntDesign name="edit" size={24} color={colors.primary} style={{ marginLeft: 8 }} />
             ),
           }} 
         />
@@ -356,7 +356,7 @@ export default function EditProductScreen() {
         options={{
           title: 'Edit Product',
           headerLeft: () => (
-            <Edit size={24} color={colors.primary} style={{ marginLeft: 8 }} />
+            <AntDesign name="edit" size={24} color={colors.primary} style={{ marginLeft: 8 }} />
           ),
         }} 
       />

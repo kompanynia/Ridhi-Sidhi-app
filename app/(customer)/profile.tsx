@@ -10,7 +10,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useProductStore } from '@/stores/productStore';
 import { Location } from '@/types';
 import { companiesData, CompanyDetails } from '@/mocks/companies';
-import { Building2, Download, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -266,7 +266,7 @@ export default function ProfileScreen() {
                 onPress={() => setCurrentBankPage(0)}
                 disabled={currentBankPage === 0}
               >
-                <ChevronLeft size={20} color={currentBankPage === 0 ? colors.textLight : colors.primary} />
+                <AntDesign name="left" size={20} color={currentBankPage === 0 ? colors.textLight : colors.primary} />
               </Pressable>
               
               <Text style={styles.bankLocationTitle}>
@@ -278,7 +278,7 @@ export default function ProfileScreen() {
                 onPress={() => setCurrentBankPage(1)}
                 disabled={currentBankPage === 1}
               >
-                <ChevronRight size={20} color={currentBankPage === 1 ? colors.textLight : colors.primary} />
+                <AntDesign name="right" size={20} color={currentBankPage === 1 ? colors.textLight : colors.primary} />
               </Pressable>
             </View>
             
@@ -517,7 +517,7 @@ export default function ProfileScreen() {
                   }
                 }}
                 style={styles.modalButton}
-                icon={<Download size={16} color={colors.white} />}
+                icon={<AntDesign name="download" size={16} color={colors.white} />}
               />
               <Button
                 title="Close"

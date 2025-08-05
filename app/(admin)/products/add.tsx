@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Switch, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Plus } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { CompanyPicker } from '@/components/CompanyPicker';
@@ -281,7 +281,7 @@ export default function AddProductScreen() {
         options={{
           title: 'Add Product',
           headerLeft: () => (
-            <Plus size={24} color={colors.primary} style={{ marginLeft: 8 }} />
+            <AntDesign name="plus" size={24} color={colors.primary} style={{ marginLeft: 8 }} />
           ),
         }} 
       />

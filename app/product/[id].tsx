@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
 import { useCartStore } from '@/stores/cartStore';
 import { Product, ProductVariation, calculateDiscountedPrice, getDiscountAmount } from '@/types';
-import { ShoppingCart } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -340,7 +340,7 @@ export default function ProductDetailScreen() {
             style={styles.floatingCartButton}
             onPress={() => router.push('/(customer)/cart')}
           >
-            <ShoppingCart size={20} color={colors.white} />
+            <AntDesign name="shoppingcart" size={20} color={colors.white} />
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>{cartCount}</Text>
             </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert, TextInput, Pressable } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { CartItemComponent } from '@/components/CartItem';
@@ -112,7 +112,7 @@ export default function CartScreen() {
             style={styles.backButton} 
             onPress={() => router.push(returnTo)}
           >
-            <ArrowLeft size={20} color={colors.text} />
+            <AntDesign name="arrowleft" size={20} color={colors.text} />
           </Pressable>
         )}
         <Text style={styles.title}>Your Cart</Text>

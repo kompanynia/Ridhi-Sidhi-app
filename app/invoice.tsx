@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView, Share, Platform, Alert } from 'reac
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
-import { Download } from 'lucide-react-native';
+import { AntDesign } from '@expo/vector-icons';
 import { Button } from '@/components/Button';
 import { colors } from '@/constants/colors';
 import { useCartStore } from '@/stores/cartStore';
@@ -94,7 +94,7 @@ export default function InvoiceScreen() {
           variant="outline"
           style={styles.actionButton}
           disabled={isDownloading}
-          icon={<Download size={16} color={isDownloading ? colors.textLight : colors.primary} />}
+          icon={<AntDesign name="download" size={16} color={isDownloading ? colors.textLight : colors.primary} />}
         />
         <Button
           title="Done"
