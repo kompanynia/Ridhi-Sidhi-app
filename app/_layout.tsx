@@ -33,7 +33,6 @@ export default function RootLayout() {
   useEffect(() => {
     if (error) {
       console.error('Font loading error:', error);
-      // Don't throw - just log the error
     }
   }, [error]);
 
@@ -83,7 +82,6 @@ function RootLayoutNav() {
     </GestureHandlerRootView>
   );
 
-  // Safely wrap with tRPC provider
   try {
     if (isBackendConfigured() && trpcClient) {
       return (
@@ -95,6 +93,6 @@ function RootLayoutNav() {
   } catch (trpcError) {
     console.error('tRPC initialization error:', trpcError);
   }
-  
+
   return content;
 }
