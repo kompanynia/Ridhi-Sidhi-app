@@ -61,6 +61,17 @@ export default function CustomerOrdersScreen() {
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <AntDesign name="checkcircle" size={16} color={colors.success} />;
+      case 'cancelled':
+        return <AntDesign name="closecircle" size={16} color={colors.error} />;
+      default:
+        return <Feather name="clock" size={16} color={colors.secondary} />;
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
