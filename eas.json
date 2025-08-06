@@ -11,8 +11,7 @@
         "gradleCommand": ":app:assembleDebug",
         "env": {
           "APP_VARIANT": "development"
-        },
-        "jsEngine": "hermes"
+        }
       },
       "ios": {
         "developmentClient": true,
@@ -26,8 +25,7 @@
         "gradleCommand": ":app:assembleRelease",
         "env": {
           "EXPO_NO_DOTENV": "1"
-        },
-        "jsEngine": "hermes"
+        }
       },
       "ios": {
         "distribution": "internal"
@@ -38,8 +36,7 @@
         "buildType": "app-bundle",
         "env": {
           "EXPO_NO_DOTENV": "1"
-        },
-        "jsEngine": "hermes"
+        }
       },
       "ios": {
         "distribution": "store"
