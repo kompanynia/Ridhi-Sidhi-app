@@ -90,7 +90,7 @@ export default function IndexScreen() {
             Initialization Failed
           </Text>
           <Text style={{ 
-            color: colors.textSecondary || colors.text, 
+            color: colors.textLight, 
             fontSize: 14,
             textAlign: 'center'
           }}>
