@@ -34,7 +34,7 @@
         "WRITE_EXTERNAL_STORAGE",
         "INTERNET"
       ],
-      "hermesEnabled": false
+      "jsEngine": "jsc"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
