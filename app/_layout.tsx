@@ -10,25 +10,20 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { trpc, trpcClient, isBackendConfigured } from "@/lib/trpc";
 import { colors } from "@/constants/colors";
 
-
 export const unstable_settings = {
   initialRouteName: "index",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
-
-
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -37,8 +32,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (error) {
-      console.error(error);
-      throw error;
+      console.error('Font loading error:', error);
+      // Don't throw - just log the error
     }
   }, [error]);
 
@@ -48,8 +43,6 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-
-
   if (!loaded) {
     return null;
   }
@@ -58,7 +51,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  // Only wrap with tRPC provider if backend is available
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
@@ -91,14 +83,18 @@ function RootLayoutNav() {
     </GestureHandlerRootView>
   );
 
-  // Conditionally wrap with tRPC provider
-  if (isBackendConfigured() && trpcClient) {
-    return (
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        {content}
-      </trpc.Provider>
-    );
+  // Safely wrap with tRPC provider
+  try {
+    if (isBackendConfigured() && trpcClient) {
+      return (
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
+          {content}
+        </trpc.Provider>
+      );
+    }
+  } catch (trpcError) {
+    console.error('tRPC initialization error:', trpcError);
   }
-
+  
   return content;
 }
