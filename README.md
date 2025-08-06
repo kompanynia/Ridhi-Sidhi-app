@@ -164,4 +164,4 @@ For support, email your-email@example.com or create an issue in this repository.
 
 - Built with [Expo](https://expo.dev/)
 - Database powered by [Supabase](https://supabase.com/)
-- Icons from [Lucide](https://lucide.dev/)
+- Icons from [@expo/vector-icons](https://docs.expo.dev/guides/icons/)
