@@ -1,4 +1,3 @@
-// app/_layout.tsx
 import 'react-native-gesture-handler';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
