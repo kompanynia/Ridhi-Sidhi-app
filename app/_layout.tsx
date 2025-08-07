@@ -70,6 +70,7 @@ function RootLayoutNav() {
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ href: null }} />
           <Stack.Screen name="login" options={{ title: "Login", headerShown: false }} />
           <Stack.Screen name="signup" options={{ title: "Sign Up", headerShown: false }} />
           <Stack.Screen name="location" options={{ headerShown: false }} />
