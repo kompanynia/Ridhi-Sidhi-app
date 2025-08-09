@@ -626,6 +626,7 @@ const styles = StyleSheet.create({
     minWidth: 50,
     textAlign: 'center',
     backgroundColor: colors.white,
+    color: colors.text,
   },
   floatingCart: {
     position: 'absolute',

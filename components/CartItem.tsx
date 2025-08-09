@@ -239,6 +239,7 @@ const styles = StyleSheet.create({
     minWidth: 45,
     textAlign: 'center',
     backgroundColor: colors.white,
+    color: colors.text,
   },
   quantityInput: {
     paddingHorizontal: 16,
