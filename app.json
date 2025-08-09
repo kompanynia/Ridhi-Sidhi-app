@@ -13,6 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+     "eas": {
+        "projectId": "YOUR-PROJECT-ID-HERE"
+      },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.rork.shopeasymobileapp",
