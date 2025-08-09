@@ -13,9 +13,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-     "eas": {
-        "projectId": "742de8b2-a92d-46d6-b7fa-a25160149ffc"
-      },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.rork.shopeasymobileapp",
@@ -32,10 +29,11 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "INTERNET"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO"
       ],
       "jsEngine": "jsc"
     },
@@ -58,6 +56,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "sdkVersion": "53.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "extra": {
+      "router": {
+        "origin": "https://rork.com/"
+      },
+      "eas": {
+        "projectId": "742de8b2-a92d-46d6-b7fa-a25160149ffc"
+      }
     }
   }
 }
