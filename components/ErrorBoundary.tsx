@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: colors.textLight,
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 24,
