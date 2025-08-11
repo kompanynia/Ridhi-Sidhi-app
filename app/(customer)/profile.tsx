@@ -34,6 +34,21 @@ export default function ProfileScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleLogout = () => {
+    if (Platform.OS === 'web') {
+      (async () => {
+        try {
+          console.log('Customer logout (web) initiated...');
+          await logout();
+        } catch (error) {
+          console.error('Customer logout (web) error:', error);
+        } finally {
+          console.log('Navigating to login (web) ...');
+          router.replace('/login');
+        }
+      })();
+      return;
+    }
+
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',

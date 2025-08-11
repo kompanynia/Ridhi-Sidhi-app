@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable, RefreshControl, Alert, Platform } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,19 +12,43 @@ export default function AdminOrdersScreen() {
   const router = useRouter();
   const { orders, updateOrderStatus, fetchOrders, subscribeToOrders } = useCartStore();
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
-  const [refreshing, setRefreshing] = useState(false);
-  
-  const filteredOrders = selectedLocation 
-    ? orders.filter(order => order.location === selectedLocation)
-    : orders;
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'completed' | 'cancelled'>('all');
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'last7' | 'month'>('all');
+
+  const filteredOrders = useMemo(() => {
+    let list = selectedLocation ? orders.filter(o => o.location === selectedLocation) : orders;
+
+    if (statusFilter !== 'all') {
+      list = list.filter(o => o.status === statusFilter);
+    }
+
+    if (dateFilter !== 'all') {
+      const now = new Date();
+      let start: Date | null = null;
+      if (dateFilter === 'today') {
+        start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      } else if (dateFilter === 'last7') {
+        start = new Date(now);
+        start.setDate(now.getDate() - 6);
+        start.setHours(0, 0, 0, 0);
+      } else if (dateFilter === 'month') {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+      }
+      if (start) {
+        list = list.filter(o => new Date(o.date).getTime() >= start!.getTime());
+      }
+    }
+
+    return list;
+  }, [orders, selectedLocation, statusFilter, dateFilter]);
     
   console.log('Admin orders screen - Total orders:', orders.length, 'Filtered orders:', filteredOrders.length);
   console.log('Sample order data:', orders[0]);
 
-  // Sort orders by date (newest first)
-  const sortedOrders = [...filteredOrders].sort((a, b) => 
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  const sortedOrders = useMemo(() => (
+    [...filteredOrders].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  ), [filteredOrders]);
 
   useEffect(() => {
     console.log('Admin orders screen mounted, fetching orders...');
@@ -230,6 +254,7 @@ export default function AdminOrdersScreen() {
         <Text style={styles.filterLabel}>Filter by Location:</Text>
         <View style={styles.filterOptions}>
           <Pressable
+            testID="filter-location-all"
             style={[
               styles.filterOption,
               selectedLocation === null && styles.selectedFilter,
@@ -247,6 +272,7 @@ export default function AdminOrdersScreen() {
           </Pressable>
           
           <Pressable
+            testID="filter-location-udaipur"
             style={[
               styles.filterOption,
               selectedLocation === 'Udaipur' && styles.selectedFilter,
@@ -264,6 +290,7 @@ export default function AdminOrdersScreen() {
           </Pressable>
           
           <Pressable
+            testID="filter-location-mungana"
             style={[
               styles.filterOption,
               selectedLocation === 'Mungana' && styles.selectedFilter,
@@ -280,6 +307,43 @@ export default function AdminOrdersScreen() {
             </Text>
           </Pressable>
         </View>
+
+        <Text style={[styles.filterLabel, { marginTop: 12 }]}>Filter by Status:</Text>
+        <View style={styles.filterOptions}>
+          {(['all','pending','completed','cancelled'] as const).map(s => (
+            <Pressable
+              key={s}
+              testID={`filter-status-${s}`}
+              style={[styles.filterOption, statusFilter === s && styles.selectedFilter]}
+              onPress={() => setStatusFilter(s)}
+            >
+              <Text style={[styles.filterText, statusFilter === s && styles.selectedFilterText]}>
+                {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <Text style={[styles.filterLabel, { marginTop: 12 }]}>Filter by Date:</Text>
+        <View style={styles.filterOptions}>
+          {([
+            { key: 'all', label: 'All' },
+            { key: 'today', label: 'Today' },
+            { key: 'last7', label: 'Last 7 days' },
+            { key: 'month', label: 'This month' },
+          ] as const).map(opt => (
+            <Pressable
+              key={opt.key}
+              testID={`filter-date-${opt.key}`}
+              style={[styles.filterOption, dateFilter === opt.key && styles.selectedFilter]}
+              onPress={() => setDateFilter(opt.key)}
+            >
+              <Text style={[styles.filterText, dateFilter === opt.key && styles.selectedFilterText]}>
+                {opt.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
       
       <FlatList
@@ -287,6 +351,7 @@ export default function AdminOrdersScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        testID="orders-list"
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -302,7 +367,7 @@ export default function AdminOrdersScreen() {
             <Text style={styles.emptyText}>
               {selectedLocation 
                 ? `No orders for ${selectedLocation}` 
-                : 'No orders have been placed yet'}
+                : 'No orders match current filters'}
             </Text>
           </View>
         }

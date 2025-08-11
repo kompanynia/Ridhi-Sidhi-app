@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, ScrollView, Pressable, Alert, Modal, FlatList } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, Pressable, Alert, Modal, FlatList, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -42,6 +42,21 @@ export default function AdminDashboardScreen() {
   const munganaOrders = orders.filter(order => order.location === 'Mungana');
 
   const handleLogout = () => {
+    if (Platform.OS === 'web') {
+      (async () => {
+        try {
+          console.log('Admin logout (web) initiated...');
+          await logout();
+        } catch (error) {
+          console.error('Admin logout (web) error:', error);
+        } finally {
+          console.log('Navigating to login (web) ...');
+          router.replace('/login');
+        }
+      })();
+      return;
+    }
+
     Alert.alert(
       'Logout',
       'Are you sure you want to logout?',
@@ -57,7 +72,6 @@ export default function AdminDashboardScreen() {
               router.replace('/login');
             } catch (error) {
               console.error('Admin logout error:', error);
-              // Force navigation to login even if logout fails
               router.replace('/login');
             }
           },
