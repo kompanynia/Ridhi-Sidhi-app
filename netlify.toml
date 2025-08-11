@@ -1,6 +1,6 @@
 [build]
-  command = "npm install && npx expo export --platform web"
-  publish = "dist"
+  command = "npm install @expo/webpack-config webpack webpack-cli webpack-dev-server && npx expo export:web --webpack"
+  publish = "web-build"
 
 [build.environment]
   EXPO_NO_TELEMETRY = "1"
@@ -9,7 +9,6 @@
   EXPO_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlZGdqeG91YXdmeGludmxkeGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NjAzNjcsImV4cCI6MjA2NjMzNjM2N30.Ok_eDp0RJpvey5wpNPE-pw5zzNtPCoEEceQCgsMGonQ"
   EXPO_PUBLIC_RORK_API_BASE_URL = "https://dev-xfcmvrdbt04s7iesuk69v.rorktest.dev"
 
-# SPA routing so deep links work
 [[redirects]]
   from = "/*"
   to = "/index.html"
