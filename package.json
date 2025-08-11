@@ -10,7 +10,8 @@
     "ios": "expo run:ios",
     "build": "eas build",
     "build:android": "eas build --platform android",
-    "clean": "expo prebuild --clean"
+    "clean": "expo prebuild --clean",
+    "build:web": "expo export --platform web --output-dir dist"
   },
   "expo": {
     "doctor": {
