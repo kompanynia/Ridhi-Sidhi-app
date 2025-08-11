@@ -1,0 +1,10 @@
+[build]
+  command = "npx expo export --platform web --output-dir dist"
+  publish = "dist"
+  environment = { EXPO_NO_TELEMETRY = "1", NODE_VERSION = "20" }
+
+# SPA routing so deep links work
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
