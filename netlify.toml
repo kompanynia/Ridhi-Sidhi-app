@@ -3,6 +3,11 @@
   publish = "dist"
   environment = { EXPO_NO_TELEMETRY = "1", NODE_VERSION = "20" }
 
+  # Disable Netlify's asset optimization which can break ESM (import.meta) by converting module scripts
+  # into classic scripts during post-processing.
+[build.processing]
+  skip_processing = true
+
 # SPA routing so deep links work
 [[redirects]]
   from = "/*"
