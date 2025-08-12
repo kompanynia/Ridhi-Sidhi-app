@@ -219,7 +219,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.log('Signup successful for:', data.user.email);
         
         // Wait a moment for the trigger to potentially create the profile
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
         // Check if profile was created by trigger
         let { data: profile, error: profileError } = await supabase
@@ -240,39 +240,73 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         
         // Profile exists, now ensure password is saved
         if (profile) {
-          console.log('Profile exists, saving password to database...');
+          console.log('Profile exists, attempting to save password to database...');
+          console.log('Current profile password field:', profile.password);
           
-          // Always update the password field
-          const { data: updatedProfile, error: updateError } = await supabase
-            .from('users')
-            .update({ 
-              password: password,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', data.user.id)
-            .select()
-            .single();
+          // Try multiple approaches to save the password
+          let passwordSaved = false;
           
-          if (updateError) {
-            console.error('Error updating password in profile:', updateError);
-            // Don't throw error, just log it and continue
-            console.log('Continuing with signup despite password save error');
-          } else {
-            console.log('Password saved to profile successfully');
-            profile = updatedProfile;
+          // Approach 1: Direct update
+          try {
+            const { data: updatedProfile, error: updateError } = await supabase
+              .from('users')
+              .update({ 
+                password: password,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', data.user.id)
+              .select()
+              .single();
+            
+            if (!updateError && updatedProfile) {
+              console.log('Password saved successfully via direct update');
+              profile = updatedProfile;
+              passwordSaved = true;
+            } else {
+              console.error('Direct update failed:', updateError);
+            }
+          } catch (directError) {
+            console.error('Direct update exception:', directError);
           }
           
-          // Verify password was saved by fetching again
-          const { data: verifyProfile, error: verifyError } = await supabase
-            .from('users')
-            .select('password')
-            .eq('id', data.user.id)
-            .single();
+          // Approach 2: If direct update failed, try with RPC or raw SQL
+          if (!passwordSaved) {
+            try {
+              console.log('Trying alternative password save method...');
+              const { error: rpcError } = await supabase.rpc('update_user_password', {
+                user_id: data.user.id,
+                new_password: password
+              });
+              
+              if (!rpcError) {
+                console.log('Password saved via RPC function');
+                passwordSaved = true;
+              } else {
+                console.error('RPC update failed:', rpcError);
+              }
+            } catch (rpcException) {
+              console.error('RPC method not available or failed:', rpcException);
+            }
+          }
           
-          if (!verifyError && verifyProfile?.password) {
-            console.log('Password verification successful - password is saved in database');
-          } else {
-            console.log('Password verification failed - password may not be saved:', verifyError);
+          // Final verification
+          try {
+            const { data: verifyProfile, error: verifyError } = await supabase
+              .from('users')
+              .select('password')
+              .eq('id', data.user.id)
+              .single();
+            
+            if (!verifyError && verifyProfile?.password === password) {
+              console.log('✅ Password verification successful - password is saved in database');
+            } else {
+              console.log('❌ Password verification failed - password may not be saved');
+              console.log('Expected:', password);
+              console.log('Found:', verifyProfile?.password);
+              console.log('Verify error:', verifyError);
+            }
+          } catch (verifyException) {
+            console.error('Password verification exception:', verifyException);
           }
         }
         
