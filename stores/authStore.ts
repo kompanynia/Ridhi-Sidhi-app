@@ -18,7 +18,7 @@ interface AuthState {
   resetPassword: (newPassword: string) => Promise<void>;
   initialize: () => Promise<void>;
   clearError: () => void;
-  createUserProfile: (authUser: SupabaseUser, role?: UserRole) => Promise<void>;
+  createUserProfile: (authUser: SupabaseUser, role?: UserRole, password?: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -85,7 +85,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
   
-  createUserProfile: async (authUser: SupabaseUser, role: UserRole = 'customer') => {
+  createUserProfile: async (authUser: SupabaseUser, role: UserRole = 'customer', password?: string) => {
     try {
       console.log('Creating user profile for:', authUser.email);
       
@@ -96,6 +96,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           email: authUser.email || '',
           name: authUser.user_metadata?.name || authUser.email?.split('@')[0] || 'User',
           role: role,
+          password: password || null,
         })
         .select()
         .single();
@@ -230,11 +231,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         // If profile doesn't exist, create it manually (always as customer)
         if (profileError && profileError.code === 'PGRST116') {
           console.log('Profile not found after signup, creating manually...');
-          await get().createUserProfile(data.user, 'customer');
+          await get().createUserProfile(data.user, 'customer', password);
           return;
         } else if (profileError) {
           console.error('Profile fetch error after signup:', profileError);
           throw new Error(`Failed to fetch user profile: ${profileError.message}`);
+        } else if (profile && !profile.password) {
+          // If profile exists but password is missing, update it
+          console.log('Profile exists but password missing, updating...');
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({ password: password })
+            .eq('id', data.user.id);
+          
+          if (updateError) {
+            console.error('Error updating password in profile:', updateError);
+          } else {
+            console.log('Password added to existing profile');
+            profile.password = password;
+          }
         }
         
         if (profile) {
