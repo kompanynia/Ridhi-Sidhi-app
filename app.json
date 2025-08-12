@@ -1,82 +1,82 @@
 {
-"expo": {
-  "name": "RiddhiSiddhi",
-  "slug": "shopeasy-mobile-app",
-  "version": "1.0.0",
-  "orientation": "portrait",
-  "icon": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
-  "scheme": "myapp",
-  "userInterfaceStyle": "automatic",
-  "newArchEnabled": false,
-  "splash": {
-    "image": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
-    "resizeMode": "contain",
-    "backgroundColor": "#ffffff"
-  },
-  "ios": {
-    "supportsTablet": true,
-    "bundleIdentifier": "app.rork.shopeasymobileapp",
-    "infoPlist": {
-      "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
-      "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
-      "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
-    }
-  },
-  "android": {
-    "package": "app.rork.shopeasymobileapp",
-    "adaptiveIcon": {
-      "foregroundImage": "https://r2-pub.rork.com/attachments/5zp21g91k7b28ev25688i",
+  "expo": {
+    "name": "RiddhiSiddhi",
+    "slug": "shopeasy-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "permissions": [
-      "android.permission.CAMERA",
-      "android.permission.READ_EXTERNAL_STORAGE",
-      "android.permission.WRITE_EXTERNAL_STORAGE",
-      "android.permission.INTERNET",
-      "android.permission.RECORD_AUDIO",
-      "READ_EXTERNAL_STORAGE",
-      "WRITE_EXTERNAL_STORAGE",
-      "INTERNET",
-      "CAMERA"
-    ],
-    "jsEngine": "jsc"
-  },
-  "web": {
-    "favicon": "https://r2-pub.rork.com/attachments/8jog0xbitz70o90dfh6qb"
-  },
-  "plugins": [
-    [
-      "expo-router",
-      {
-        "origin": "https://rork.com/"
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.rork.shopeasymobileapp",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos",
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
       }
-    ],
-    [
-      "expo-image-picker",
-      {
-        "photosPermission": "The app accesses your photos to let you share them with your friends."
-      }
-    ]
-  ],
-  "experiments": {
-    "typedRoutes": true
-  },
-  "sdkVersion": "53.0.0",
-  "platforms": [
-    "ios",
-    "android",
-    "web"
-  ],
-  "extra": {
-    "router": {
-      "origin": "https://rork.com/"
     },
-    "EXPO_PUBLIC_SUPABASE_URL": "https://wedgjxouawfxinvldxki.supabase.co",
-    "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlZGdqeG91YXdmeGludmxkeGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NjAzNjcsImV4cCI6MjA2NjMzNjM2N30.Ok_eDp0RJpvey5wpNPE-pw5zzNtPCoEEceQCgsMGonQ",
-    "EXPO_PUBLIC_RORK_API_BASE_URL": "https://dev-xfcmvrdbt04s7iesuk69v.rorktest.dev",
-    "eas": {
-      "projectId": "742de8b2-a92d-46d6-b7fa-a25160149ffc"
+    "android": {
+      "package": "app.rork.shopeasymobileapp",
+      "adaptiveIcon": {
+        "foregroundImage": "https://r2-pub.rork.com/attachments/5zp21g91k7b28ev25688i",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "INTERNET",
+        "CAMERA"
+      ],
+      "jsEngine": "jsc"
+    },
+    "web": {
+      "favicon": "https://r2-pub.rork.com/attachments/8jog0xbitz70o90dfh6qb"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://rork.com/"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "sdkVersion": "53.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "extra": {
+      "router": {
+        "origin": "https://rork.com/"
+      },
+      "EXPO_PUBLIC_SUPABASE_URL": "https://wedgjxouawfxinvldxki.supabase.co",
+      "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndlZGdqeG91YXdmeGludmxkeGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NjAzNjcsImV4cCI6MjA2NjMzNjM2N30.Ok_eDp0RJpvey5wpNPE-pw5zzNtPCoEEceQCgsMGonQ",
+      "EXPO_PUBLIC_RORK_API_BASE_URL": "https://dev-xfcmvrdbt04s7iesuk69v.rorktest.dev",
+      "eas": {
+        "projectId": "742de8b2-a92d-46d6-b7fa-a25160149ffc"
+      }
     }
   }
-}
 }
