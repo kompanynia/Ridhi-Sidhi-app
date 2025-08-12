@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import Head from 'expo-router/head';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -52,6 +53,10 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <Head>
+        <link rel="icon" href="https://i.ibb.co/zhp7JwT0/IMG-0885.jpg" />
+        <link rel="apple-touch-icon" href="https://i.ibb.co/zhp7JwT0/IMG-0885.jpg" />
+      </Head>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
         <Stack
@@ -87,7 +92,7 @@ function RootLayoutNav() {
     if (isBackendConfigured() && trpcClient) {
       return (
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
-          {content}
+          <>{content}</>
         </trpc.Provider>
       );
     }
