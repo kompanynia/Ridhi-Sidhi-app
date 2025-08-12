@@ -7,11 +7,11 @@ import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { colors } from '@/constants/colors';
 import { supabase } from '@/lib/supabase';
+import { trpc } from '@/lib/trpc';
 
 export default function SimpleResetPasswordScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,10 +56,12 @@ export default function SimpleResetPasswordScreen() {
     }
   };
 
+  const resetPasswordMutation = trpc.auth.resetPassword.useMutation();
+
   const handleResetPassword = async () => {
     setError('');
     
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!newPassword || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -74,35 +76,12 @@ export default function SimpleResetPasswordScreen() {
       return;
     }
 
-    if (currentPassword === newPassword) {
-      setError('New password must be different from current password');
-      return;
-    }
-
     setIsLoading(true);
     try {
-      // First, try to sign in with current credentials to verify
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+      await resetPasswordMutation.mutateAsync({
         email: email.trim().toLowerCase(),
-        password: currentPassword,
+        newPassword: newPassword
       });
-
-      if (signInError) {
-        setError('Current password is incorrect');
-        return;
-      }
-
-      // Update the password
-      const { error: updateError } = await supabase.auth.updateUser({
-        password: newPassword
-      });
-
-      if (updateError) {
-        throw updateError;
-      }
-
-      // Sign out after password change
-      await supabase.auth.signOut();
 
       Alert.alert(
         'Password Updated',
@@ -120,7 +99,6 @@ export default function SimpleResetPasswordScreen() {
   const handleBack = () => {
     if (step === 'password') {
       setStep('email');
-      setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
       setError('');
@@ -157,7 +135,7 @@ export default function SimpleResetPasswordScreen() {
               <Text style={styles.subtitle}>
                 {step === 'email' 
                   ? 'Enter your email address to continue' 
-                  : 'Enter your current password and choose a new one'
+                  : 'Choose your new password'
                 }
               </Text>
             </View>
@@ -194,14 +172,6 @@ export default function SimpleResetPasswordScreen() {
                     <Text style={styles.emailLabel}>Email:</Text>
                     <Text style={styles.emailText}>{email}</Text>
                   </View>
-                  
-                  <Input
-                    label="Current Password"
-                    placeholder="Enter your current password"
-                    secureTextEntry
-                    value={currentPassword}
-                    onChangeText={setCurrentPassword}
-                  />
                   
                   <Input
                     label="New Password"
