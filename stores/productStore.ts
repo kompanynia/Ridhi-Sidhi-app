@@ -290,32 +290,35 @@ export const useProductStore = create<ProductState>((set, get) => ({
   deleteProduct: async (productId) => {
     set({ isLoading: true, error: null });
     try {
-      const { error } = await supabase
+      console.log('Attempting to delete product:', productId);
+      
+      const { error, data } = await supabase
         .from('products')
         .delete()
-        .eq('id', productId);
+        .eq('id', productId)
+        .select();
       
-      if (error) throw error;
+      console.log('Delete result:', { error, data });
+      
+      if (error) {
+        console.error('Delete error:', error);
+        throw error;
+      }
+      
+      console.log('Product deleted successfully');
       
       set(state => ({ 
         products: state.products.filter(product => product.id !== productId),
+        filteredProducts: state.filteredProducts.filter(product => product.id !== productId),
         isLoading: false 
       }));
       
-      // Reapply filters
-      const { currentLocation, currentCompanyFilter, currentSearchQuery } = get();
-      if (currentLocation) {
-        get().filterByLocation(currentLocation);
-      }
-      if (currentCompanyFilter) {
-        get().filterByCompany(currentCompanyFilter);
-      }
-      if (currentSearchQuery) {
-        get().filterBySearch(currentSearchQuery);
-      }
+      console.log('State updated after delete');
     } catch (error) {
+      console.error('Delete product failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete product';
       set({ 
-        error: error instanceof Error ? error.message : 'Failed to delete product', 
+        error: errorMessage, 
         isLoading: false 
       });
       throw error;

@@ -71,11 +71,18 @@ export default function ProductsScreen() {
   const confirmDelete = async () => {
     if (productToDelete) {
       try {
+        console.log('Confirming delete for product:', productToDelete);
         await deleteProduct(productToDelete);
+        console.log('Delete successful, closing modal');
         setShowDeleteModal(false);
         setProductToDelete(null);
       } catch (error) {
         console.error('Delete failed:', error);
+        Alert.alert(
+          'Delete Failed',
+          error instanceof Error ? error.message : 'Failed to delete product. Please try again.',
+          [{ text: 'OK' }]
+        );
       }
     }
   };

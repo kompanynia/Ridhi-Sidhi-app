@@ -15,7 +15,7 @@ interface AuthState {
   updateProfile: (updates: Partial<User>) => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
-  resetPassword: (email: string, newPassword: string) => Promise<void>;
+  resetPassword: (newPassword: string) => Promise<void>;
   initialize: () => Promise<void>;
   clearError: () => void;
   createUserProfile: (authUser: SupabaseUser, role?: UserRole) => Promise<void>;
@@ -373,70 +373,64 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   forgotPassword: async (email) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('Checking if user exists:', email);
+      console.log('Sending password reset email to:', email);
       
-      // Check if user exists in our database
+      const cleanEmail = email.trim().toLowerCase();
+      
+      // Check if user exists in our database first
       const { data: user, error: userError } = await supabase
         .from('users')
         .select('id, email')
-        .eq('email', email.trim().toLowerCase())
+        .eq('email', cleanEmail)
         .single();
       
       if (userError || !user) {
         throw new Error('No account found with this email address');
       }
       
+      // Send password reset email using Supabase's built-in functionality
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) {
+        throw error;
+      }
+      
       set({ isLoading: false });
-      console.log('User found, can proceed with password reset');
+      console.log('Password reset email sent successfully');
     } catch (error) {
       const authError = error as Error;
-      console.error('Password reset check failed:', authError.message);
+      console.error('Password reset failed:', authError.message);
       set({ 
-        error: authError.message || 'Failed to verify email', 
+        error: authError.message || 'Failed to send password reset email', 
         isLoading: false 
       });
       throw error;
     }
   },
   
-  resetPassword: async (email, newPassword) => {
+  resetPassword: async (newPassword) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('Resetting password for:', email);
+      console.log('Updating password...');
       
-      // First, check if user exists
-      const { data: user, error: userError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', email.trim().toLowerCase())
-        .single();
-      
-      if (userError || !user) {
-        throw new Error('No account found with this email address');
-      }
-      
-      // Use admin API to update password directly
-      // Note: This requires RLS policies to be properly configured
-      const { error } = await supabase.auth.admin.updateUserById(user.id, {
+      // Update the password for the currently authenticated user
+      const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
       
       if (error) {
-        // Fallback: Try to sign in the user temporarily and update password
-        console.log('Admin update failed, trying alternative method');
-        
-        // This is a simplified approach - in production you'd want a more secure method
-        // For now, we'll just indicate success and let them try logging in
-        console.log('Password reset completed (simplified)');
+        throw error;
       }
       
       set({ isLoading: false });
-      console.log('Password reset successful');
+      console.log('Password updated successfully');
     } catch (error) {
       const authError = error as Error;
-      console.error('Password reset failed:', authError.message);
+      console.error('Password update failed:', authError.message);
       set({ 
-        error: authError.message || 'Failed to reset password', 
+        error: authError.message || 'Failed to update password', 
         isLoading: false 
       });
       throw error;
