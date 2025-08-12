@@ -4,12 +4,12 @@
     "slug": "shopeasy-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
+    "icon": "./icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": false,
     "splash": {
-      "image": "https://r2-pub.rork.com/attachments/x0ubbkiygnyp0x2d91glx",
+      "image": "./icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -25,7 +25,7 @@
     "android": {
       "package": "app.rork.shopeasymobileapp",
       "adaptiveIcon": {
-        "foregroundImage": "https://r2-pub.rork.com/attachments/5zp21g91k7b28ev25688i",
+        "foregroundImage": "./icon.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -42,7 +42,7 @@
       "jsEngine": "jsc"
     },
     "web": {
-      "favicon": "https://r2-pub.rork.com/attachments/8jog0xbitz70o90dfh6qb"
+      "favicon": "./32.png"
     },
     "plugins": [
       [
