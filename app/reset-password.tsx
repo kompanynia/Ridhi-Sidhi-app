@@ -1,123 +1,142 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowLeft } from 'lucide-react-native';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { colors } from '@/constants/colors';
 import { useAuthStore } from '@/stores/authStore';
-import { supabase } from '@/lib/supabase';
 
 export default function ResetPasswordScreen() {
   const router = useRouter();
-  const { resetPassword, isLoading, error, clearError } = useAuthStore();
+  const { forgotPassword, isLoading, error, clearError } = useAuthStore();
   
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState('');
-  const [isValidSession, setIsValidSession] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
-  useEffect(() => {
-    // Check if user has a valid session from password reset link
-    const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setIsValidSession(true);
-      } else {
-        Alert.alert(
-          'Invalid Link',
-          'This password reset link is invalid or has expired. Please request a new one.',
-          [{ text: 'OK', onPress: () => router.replace('/login') }]
-        );
-      }
-    };
-    
-    checkSession();
-  }, [router]);
-
-  const handleResetPassword = async () => {
+  const handleSendResetEmail = async () => {
     clearError();
     setValidationError('');
     
-    if (!newPassword || !confirmPassword) {
-      setValidationError('Please fill in all fields');
+    if (!email) {
+      setValidationError('Please enter your email address');
       return;
     }
 
-    if (newPassword !== confirmPassword) {
-      setValidationError('Passwords do not match');
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setValidationError('Password must be at least 6 characters long');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setValidationError('Please enter a valid email address');
       return;
     }
 
     try {
-      await resetPassword(newPassword);
-      Alert.alert(
-        'Success',
-        'Your password has been updated successfully! You can now login with your new password.',
-        [{ text: 'OK', onPress: () => router.replace('/login') }]
-      );
+      await forgotPassword(email);
+      setEmailSent(true);
     } catch (err: any) {
       console.error('Password reset error:', err);
-      setValidationError(err.message || 'Failed to reset password. Please try again.');
+      setValidationError(err.message || 'Failed to send reset email. Please try again.');
     }
   };
 
-  if (!isValidSession) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Validating reset link...</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  const handleBackToLogin = () => {
+    router.replace('/login');
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Reset Password</Text>
-          <Text style={styles.subtitle}>Enter your new password below</Text>
-        </View>
-        
-        <View style={styles.form}>
-          {(error || validationError) && (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>{error || validationError}</Text>
+    <>
+      <Stack.Screen 
+        options={{
+          title: 'Reset Password',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+            >
+              <ArrowLeft size={24} color={colors.text} />
+            </TouchableOpacity>
+          ),
+        }} 
+      />
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoid}
+        >
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            <View style={styles.header}>
+              <Text style={styles.title}>
+                {emailSent ? 'Check Your Email' : 'Reset Password'}
+              </Text>
+              <Text style={styles.subtitle}>
+                {emailSent 
+                  ? 'We&apos;ve sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.' 
+                  : 'Enter your email address and we&apos;ll send you a link to reset your password.'
+                }
+              </Text>
             </View>
-          )}
-          
-          <Input
-            label="New Password"
-            placeholder="Enter new password"
-            secureTextEntry
-            value={newPassword}
-            onChangeText={setNewPassword}
-          />
-          
-          <Input
-            label="Confirm Password"
-            placeholder="Confirm new password"
-            secureTextEntry
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-          
-          <Button
-            title="Update Password"
-            onPress={handleResetPassword}
-            loading={isLoading}
-            fullWidth
-            style={styles.resetButton}
-          />
-        </View>
-      </View>
-    </SafeAreaView>
+            
+            {!emailSent ? (
+              <View style={styles.form}>
+                {(error || validationError) && (
+                  <View style={styles.errorContainer}>
+                    <Text style={styles.errorText}>{error || validationError}</Text>
+                  </View>
+                )}
+                
+                <Input
+                  label="Email Address"
+                  placeholder="Enter your email"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+                
+                <Button
+                  title="Send Reset Link"
+                  onPress={handleSendResetEmail}
+                  loading={isLoading}
+                  fullWidth
+                  style={styles.resetButton}
+                />
+              </View>
+            ) : (
+              <View style={styles.successContainer}>
+                <View style={styles.successIcon}>
+                  <Text style={styles.successIconText}>✓</Text>
+                </View>
+                <Text style={styles.successText}>
+                  Reset link sent to {email}
+                </Text>
+                <Text style={styles.instructionText}>
+                  Didn&apos;t receive the email? Check your spam folder or try again.
+                </Text>
+                <Button
+                  title="Try Again"
+                  onPress={() => setEmailSent(false)}
+                  variant="outline"
+                  style={styles.tryAgainButton}
+                />
+              </View>
+            )}
+            
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Remember your password?
+              </Text>
+              <Button
+                title="Back to Login"
+                onPress={handleBackToLogin}
+                variant="outline"
+                style={styles.loginButton}
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -126,20 +145,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  loadingContainer: {
+  keyboardAvoid: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
   },
-  loadingText: {
-    fontSize: 16,
-    color: colors.textLight,
-  },
-  content: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
     padding: 24,
     justifyContent: 'center',
+  },
+  backButton: {
+    marginLeft: -8,
   },
   header: {
     marginBottom: 32,
@@ -150,11 +165,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.text,
     marginBottom: 8,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
     color: colors.textLight,
     textAlign: 'center',
+    lineHeight: 22,
   },
   form: {
     marginBottom: 24,
@@ -172,5 +189,50 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     marginTop: 16,
+  },
+  successContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  successIconText: {
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  instructionText: {
+    fontSize: 14,
+    color: colors.textLight,
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 24,
+  },
+  tryAgainButton: {
+    paddingHorizontal: 24,
+  },
+  footer: {
+    alignItems: 'center',
+  },
+  footerText: {
+    color: colors.textLight,
+    marginBottom: 8,
+  },
+  loginButton: {
+    paddingHorizontal: 0,
   },
 });
