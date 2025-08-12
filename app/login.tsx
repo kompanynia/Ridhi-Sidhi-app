@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, Modal, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Input } from '@/components/Input';
@@ -9,13 +9,12 @@ import { useAuthStore } from '@/stores/authStore';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, forgotPassword, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
+  const { login, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [validationError, setValidationError] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState('');
+
 
   // Navigate after successful login
   useEffect(() => {
@@ -76,26 +75,7 @@ export default function LoginScreen() {
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!forgotEmail) {
-      Alert.alert('Error', 'Please enter your email address');
-      return;
-    }
-    
-    try {
-      await forgotPassword(forgotEmail);
-      Alert.alert(
-        'Check Your Email',
-        'We&apos;ve sent you a password reset link. Please check your email and follow the instructions to reset your password.',
-        [{ text: 'OK', onPress: () => {
-          setShowForgotPassword(false);
-          setForgotEmail('');
-        }}]
-      );
-    } catch (err: any) {
-      Alert.alert('Error', err.message || 'Failed to send reset email. Please try again.');
-    }
-  };
+
 
   const handleSignup = () => {
     router.push('/signup');
@@ -143,9 +123,9 @@ export default function LoginScreen() {
             
             <TouchableOpacity 
               style={styles.forgotPasswordButton}
-              onPress={() => setShowForgotPassword(true)}
+              onPress={() => router.push('/simple-reset-password')}
             >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              <Text style={styles.forgotPasswordText}>Reset Password</Text>
             </TouchableOpacity>
             
             <Button
@@ -166,49 +146,7 @@ export default function LoginScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* Forgot Password Modal */}
-      <Modal
-        visible={showForgotPassword}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowForgotPassword(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Reset Password</Text>
-            <Text style={styles.modalSubtitle}>
-              Enter your email address and we&apos;ll send you a link to reset your password.
-            </Text>
-            
-            <Input
-              label="Email"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={forgotEmail}
-              onChangeText={setForgotEmail}
-            />
-            
-            <View style={styles.modalButtons}>
-              <Button
-                title="Cancel"
-                onPress={() => {
-                  setShowForgotPassword(false);
-                  setForgotEmail('');
-                }}
-                variant="outline"
-                style={styles.modalButton}
-              />
-              <Button
-                title="Send Reset Link"
-                onPress={handleForgotPassword}
-                loading={isLoading}
-                style={styles.modalButton}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -279,41 +217,5 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '600',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  modalContent: {
-    backgroundColor: colors.white,
-    borderRadius: 12,
-    padding: 24,
-    width: '100%',
-    maxWidth: 400,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  modalSubtitle: {
-    fontSize: 14,
-    color: colors.textLight,
-    textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 20,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  modalButton: {
-    flex: 1,
-    marginHorizontal: 4,
-  },
+
 });

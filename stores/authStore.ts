@@ -389,9 +389,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       }
       
       // Send password reset email using Supabase's built-in functionality
-      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
+      // The redirect URL should be configured in Supabase Dashboard > Authentication > URL Configuration
+      const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail);
       
       if (error) {
         throw error;
