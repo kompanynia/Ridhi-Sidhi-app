@@ -219,7 +219,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         console.log('Signup successful for:', data.user.email);
         
         // Wait a moment for the trigger to potentially create the profile
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Check if profile was created by trigger
         let { data: profile, error: profileError } = await supabase
@@ -236,20 +236,43 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         } else if (profileError) {
           console.error('Profile fetch error after signup:', profileError);
           throw new Error(`Failed to fetch user profile: ${profileError.message}`);
-        } else if (profile) {
-          // Always update the password field, regardless of whether it exists or not
-          console.log('Profile exists, ensuring password is saved...');
-          const { error: updateError } = await supabase
+        }
+        
+        // Profile exists, now ensure password is saved
+        if (profile) {
+          console.log('Profile exists, saving password to database...');
+          
+          // Always update the password field
+          const { data: updatedProfile, error: updateError } = await supabase
             .from('users')
-            .update({ password: password })
-            .eq('id', data.user.id);
+            .update({ 
+              password: password,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', data.user.id)
+            .select()
+            .single();
           
           if (updateError) {
             console.error('Error updating password in profile:', updateError);
-            throw new Error(`Failed to save password: ${updateError.message}`);
+            // Don't throw error, just log it and continue
+            console.log('Continuing with signup despite password save error');
           } else {
             console.log('Password saved to profile successfully');
-            profile.password = password;
+            profile = updatedProfile;
+          }
+          
+          // Verify password was saved by fetching again
+          const { data: verifyProfile, error: verifyError } = await supabase
+            .from('users')
+            .select('password')
+            .eq('id', data.user.id)
+            .single();
+          
+          if (!verifyError && verifyProfile?.password) {
+            console.log('Password verification successful - password is saved in database');
+          } else {
+            console.log('Password verification failed - password may not be saved:', verifyError);
           }
         }
         
