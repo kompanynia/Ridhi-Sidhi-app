@@ -54,8 +54,8 @@ function RootLayoutNav() {
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Head>
-        <link rel="icon" href="https://i.ibb.co/zhp7JwT0/IMG-0885.jpg" />
-        <link rel="apple-touch-icon" href="https://i.ibb.co/zhp7JwT0/IMG-0885.jpg" />
+        <link rel="icon" href="https://r2-pub.rork.com/attachments/hj0ybwrr91794o1mxltxk" />
+        <link rel="apple-touch-icon" href="https://r2-pub.rork.com/attachments/hj0ybwrr91794o1mxltxk" />
       </Head>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
