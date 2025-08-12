@@ -236,9 +236,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         } else if (profileError) {
           console.error('Profile fetch error after signup:', profileError);
           throw new Error(`Failed to fetch user profile: ${profileError.message}`);
-        } else if (profile && !profile.password) {
-          // If profile exists but password is missing, update it
-          console.log('Profile exists but password missing, updating...');
+        } else if (profile) {
+          // Always update the password field, regardless of whether it exists or not
+          console.log('Profile exists, ensuring password is saved...');
           const { error: updateError } = await supabase
             .from('users')
             .update({ password: password })
@@ -246,8 +246,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           
           if (updateError) {
             console.error('Error updating password in profile:', updateError);
+            throw new Error(`Failed to save password: ${updateError.message}`);
           } else {
-            console.log('Password added to existing profile');
+            console.log('Password saved to profile successfully');
             profile.password = password;
           }
         }
