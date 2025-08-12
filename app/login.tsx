@@ -9,13 +9,16 @@ import { useAuthStore } from '@/stores/authStore';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { login, forgotPassword, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
+  const { login, forgotPassword, resetPassword, isLoading, error, clearError, isAuthenticated, user } = useAuthStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [validationError, setValidationError] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [resetStep, setResetStep] = useState<'email' | 'password'>('email');
 
   // Navigate after successful login
   useEffect(() => {
@@ -77,18 +80,45 @@ export default function LoginScreen() {
   };
 
   const handleForgotPassword = async () => {
-    if (!forgotEmail) {
-      Alert.alert('Error', 'Please enter your email address');
-      return;
-    }
-    
-    try {
-      await forgotPassword(forgotEmail);
-      Alert.alert('Success', 'Password reset instructions have been sent to your email');
-      setShowForgotPassword(false);
-      setForgotEmail('');
-    } catch (err) {
-      Alert.alert('Error', 'Failed to send reset email. Please try again.');
+    if (resetStep === 'email') {
+      if (!forgotEmail) {
+        Alert.alert('Error', 'Please enter your email address');
+        return;
+      }
+      
+      try {
+        await forgotPassword(forgotEmail);
+        setResetStep('password');
+      } catch (err: any) {
+        Alert.alert('Error', err.message || 'Failed to verify email. Please try again.');
+      }
+    } else {
+      if (!newPassword || !confirmPassword) {
+        Alert.alert('Error', 'Please fill in all password fields');
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        Alert.alert('Error', 'Password must be at least 6 characters long');
+        return;
+      }
+      
+      try {
+        await resetPassword(forgotEmail, newPassword);
+        Alert.alert('Success', 'Password reset successfully! You can now login with your new password.');
+        setShowForgotPassword(false);
+        setForgotEmail('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setResetStep('email');
+      } catch (err: any) {
+        Alert.alert('Error', err.message || 'Failed to reset password. Please try again.');
+      }
     }
   };
 
@@ -153,7 +183,7 @@ export default function LoginScreen() {
           </View>
           
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don't have an account?</Text>
+            <Text style={styles.footerText}>Don&apos;t have an account?</Text>
             <TouchableOpacity onPress={handleSignup}>
               <Text style={styles.signupText}>Sign Up</Text>
             </TouchableOpacity>
@@ -172,17 +202,38 @@ export default function LoginScreen() {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Reset Password</Text>
             <Text style={styles.modalSubtitle}>
-              Enter your email address and we'll send you instructions to reset your password.
+              {resetStep === 'email' 
+                ? 'Enter your email address to verify your account.'
+                : 'Enter your new password below.'}
             </Text>
             
-            <Input
-              label="Email"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={forgotEmail}
-              onChangeText={setForgotEmail}
-            />
+            {resetStep === 'email' ? (
+              <Input
+                label="Email"
+                placeholder="Enter your email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={forgotEmail}
+                onChangeText={setForgotEmail}
+              />
+            ) : (
+              <>
+                <Input
+                  label="New Password"
+                  placeholder="Enter new password"
+                  secureTextEntry
+                  value={newPassword}
+                  onChangeText={setNewPassword}
+                />
+                <Input
+                  label="Confirm Password"
+                  placeholder="Confirm new password"
+                  secureTextEntry
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                />
+              </>
+            )}
             
             <View style={styles.modalButtons}>
               <Button
@@ -190,12 +241,15 @@ export default function LoginScreen() {
                 onPress={() => {
                   setShowForgotPassword(false);
                   setForgotEmail('');
+                  setNewPassword('');
+                  setConfirmPassword('');
+                  setResetStep('email');
                 }}
                 variant="outline"
                 style={styles.modalButton}
               />
               <Button
-                title="Send Reset Email"
+                title={resetStep === 'email' ? 'Verify Email' : 'Reset Password'}
                 onPress={handleForgotPassword}
                 loading={isLoading}
                 style={styles.modalButton}

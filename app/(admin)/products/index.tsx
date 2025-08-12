@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, Pressable, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Pressable, Image, Alert, Platform, Modal } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { SearchBar } from '@/components/SearchBar';
+import { Button } from '@/components/Button';
 import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
 import { Product } from '@/types';
@@ -19,10 +20,12 @@ export default function ProductsScreen() {
   
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
@@ -46,18 +49,40 @@ export default function ProductsScreen() {
   };
 
   const handleDeleteProduct = (productId: string) => {
-    Alert.alert(
-      'Delete Product',
-      'Are you sure you want to delete this product?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Delete', 
-          onPress: () => deleteProduct(productId),
-          style: 'destructive',
-        },
-      ]
-    );
+    if (Platform.OS === 'web') {
+      setProductToDelete(productId);
+      setShowDeleteModal(true);
+    } else {
+      Alert.alert(
+        'Delete Product',
+        'Are you sure you want to delete this product?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Delete', 
+            onPress: () => deleteProduct(productId),
+            style: 'destructive',
+          },
+        ]
+      );
+    }
+  };
+  
+  const confirmDelete = async () => {
+    if (productToDelete) {
+      try {
+        await deleteProduct(productToDelete);
+        setShowDeleteModal(false);
+        setProductToDelete(null);
+      } catch (error) {
+        console.error('Delete failed:', error);
+      }
+    }
+  };
+  
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setProductToDelete(null);
   };
 
   const renderItem = ({ item }: { item: Product }) => (
@@ -147,6 +172,38 @@ export default function ProductsScreen() {
         }
       />
       </SafeAreaView>
+      
+      {/* Delete Confirmation Modal for Web */}
+      <Modal
+        visible={showDeleteModal}
+        transparent
+        animationType="fade"
+        onRequestClose={cancelDelete}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Delete Product</Text>
+            <Text style={styles.modalSubtitle}>
+              Are you sure you want to delete this product? This action cannot be undone.
+            </Text>
+            
+            <View style={styles.modalButtons}>
+              <Button
+                title="Cancel"
+                onPress={cancelDelete}
+                variant="outline"
+                style={styles.modalButton}
+              />
+              <Button
+                title="Delete"
+                onPress={confirmDelete}
+                loading={isLoading}
+                style={[styles.modalButton, styles.deleteButton]}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
@@ -251,5 +308,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textLight,
     textAlign: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    borderRadius: 12,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: colors.textLight,
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
   },
 });
