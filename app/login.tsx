@@ -121,12 +121,7 @@ export default function LoginScreen() {
               onChangeText={setPassword}
             />
             
-            <TouchableOpacity 
-              style={styles.forgotPasswordButton}
-              onPress={() => router.push('/reset-password')}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
+
             
             <Button
               title="Login"
@@ -192,15 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 16,
-  },
-  forgotPasswordText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: '500',
-  },
+
   loginButton: {
     marginTop: 8,
   },

@@ -18,6 +18,7 @@ export interface Database {
           location: 'Udaipur' | 'Mungana' | null
           phone: string | null
           address: string | null
+          password: string | null
           created_at: string
           updated_at: string
         }
@@ -29,6 +30,7 @@ export interface Database {
           location?: 'Udaipur' | 'Pratapgarh' | null
           phone?: string | null
           address?: string | null
+          password?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -40,6 +42,7 @@ export interface Database {
           location?: 'Udaipur' | 'Pratapgarh' | null
           phone?: string | null
           address?: string | null
+          password?: string | null
           created_at?: string
           updated_at?: string
         }
