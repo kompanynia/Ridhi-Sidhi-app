@@ -7,11 +7,15 @@ import { colors } from '@/constants/colors';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { supabase } from '@/lib/supabase';
-import { Buffer } from 'buffer';
-
-// Ensure Buffer is globally available (if not already)
-if (typeof global.Buffer === 'undefined') {
-  global.Buffer = Buffer;
+// Buffer handling for mobile compatibility
+let BufferPolyfill: any;
+try {
+  BufferPolyfill = require('buffer').Buffer;
+  if (typeof global.Buffer === 'undefined') {
+    global.Buffer = BufferPolyfill;
+  }
+} catch (error) {
+  console.log('Buffer polyfill not available, using fallback');
 }
 
 
@@ -128,7 +132,23 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
         throw new Error('Failed to read file content or get base64 data');
       }
 
-			uploadData = Buffer.from(base64String, 'base64');
+      try {
+        if (BufferPolyfill) {
+          uploadData = BufferPolyfill.from(base64String, 'base64');
+        } else {
+          // Fallback: create a blob from base64
+          const byteCharacters = atob(base64String);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          uploadData = new Blob([byteArray], { type: mimeType });
+        }
+      } catch (bufferError) {
+        console.error('Buffer conversion failed:', bufferError);
+        throw new Error('Failed to process image data');
+      }
 
       console.log('Successfully converted base64 to blob');
       console.log('Blob size:', uploadData.size, 'bytes');
@@ -235,22 +255,23 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
 };
 
   const pickImageFromGallery = async () => {
-    const hasPermission = await requestPermissions();
-		console.log('hasPermission....',hasPermission);
-    if (!hasPermission) return;
-
     try {
+      const hasPermission = await requestPermissions();
+      console.log('hasPermission....',hasPermission);
+      if (!hasPermission) return;
+
+      console.log('Launching image picker...');
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
+        quality: 0.7, // Reduced quality to prevent memory issues
         allowsMultipleSelection: false,
         exif: false,
-        base64: true, // Include base64 for proper mobile upload
+        base64: Platform.OS !== 'web', // Only include base64 on mobile
         presentationStyle: ImagePicker.UIImagePickerPresentationStyle.FULL_SCREEN,
       });
-			console.log('result.....',result);
+      console.log('result.....',result);
 
       if (!result.canceled && result.assets[0]) {
         setIsUploading(true);
@@ -278,14 +299,25 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
           console.log('Generated filename:', fileName);
         }
         
-        const publicUrl = await uploadImageToSupabase(asset.uri, fileName, asset.base64 ?? undefined);
-        onImageChange(publicUrl);
+        try {
+          const publicUrl = await uploadImageToSupabase(asset.uri, fileName, asset.base64 ?? undefined);
+          onImageChange(publicUrl);
+        } catch (uploadError) {
+          console.error('Upload failed:', uploadError);
+          throw uploadError;
+        }
       }
     } catch (error) {
-      let errorMessage = 'Failed to upload image. Please try again.';
+      console.error('Gallery picker error:', error);
+      let errorMessage = 'Failed to select or upload image. Please try again.';
       
       if (error instanceof Error) {
-        if (error.message.includes('Bucket not found')) {
+        if (error.message.includes('cancelled') || error.message.includes('canceled')) {
+          // User cancelled, don't show error
+          return;
+        } else if (error.message.includes('permission')) {
+          errorMessage = 'Camera roll permission is required to select images.';
+        } else if (error.message.includes('Bucket not found')) {
           errorMessage = 'Storage bucket not found. Please create a storage bucket named "images" in your Supabase dashboard.';
         } else if (error.message.includes('storage')) {
           errorMessage = 'Storage configuration issue. Please check your Supabase storage settings.';
@@ -302,7 +334,6 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
           { text: 'Use URL', onPress: () => setShowUrlInput(true) }
         ]
       );
-      console.error('Image upload error:', error);
     } finally {
       setIsUploading(false);
     }
@@ -352,8 +383,13 @@ const uploadImageToSupabase = async (uri: string, fileName?: string, base64Data?
           console.log('Generated filename for camera:', fileName);
         }
         
-        const publicUrl = await uploadImageToSupabase(asset.uri, fileName, asset.base64 ?? undefined);
-        onImageChange(publicUrl);
+        try {
+          const publicUrl = await uploadImageToSupabase(asset.uri, fileName, asset.base64 ?? undefined);
+          onImageChange(publicUrl);
+        } catch (uploadError) {
+          console.error('Upload failed:', uploadError);
+          throw uploadError;
+        }
       }
     } catch (error) {
       let errorMessage = 'Failed to upload photo. Please try again.';

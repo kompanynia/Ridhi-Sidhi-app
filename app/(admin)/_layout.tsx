@@ -2,10 +2,14 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { CrashReporter } from '@/components/CrashReporter';
 
 export default function AdminTabLayout() {
   return (
-    <Tabs
+    <CrashReporter>
+      <ErrorBoundary>
+        <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textLight,
@@ -48,6 +52,8 @@ export default function AdminTabLayout() {
           ),
         }}
       />
-    </Tabs>
+        </Tabs>
+      </ErrorBoundary>
+    </CrashReporter>
   );
 }
