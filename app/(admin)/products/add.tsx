@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { CompanyPicker } from '@/components/CompanyPicker';
-// import { ImageUpload } from '@/components/ImageUpload';
+import { ImageUpload } from '@/components/ImageUpload';
 import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
 import { Product, ProductVariation, Location, Discount, DiscountType } from '@/types';
@@ -213,18 +213,12 @@ export default function AddProductScreen() {
   };
 
   const handleSubmit = async () => {
-    console.log('Starting product submission...');
-    
-    if (!validateForm()) {
-      console.log('Form validation failed');
-      return;
-    }
+    if (!validateForm()) return;
     
     setIsSubmitting(true);
     setError('');
     
     try {
-      console.log('Form validation passed, creating product...');
       const locations: Location[] = [];
       if (isAvailableInUdaipur) locations.push('Udaipur');
       if (isAvailableInMungana) locations.push('Mungana');
@@ -271,16 +265,11 @@ export default function AddProductScreen() {
         discount: productDiscount,
       };
       
-      console.log('Calling addProduct with:', newProduct);
       await addProduct(newProduct);
-      console.log('Product added successfully');
       Alert.alert('Success', 'Product added successfully');
       router.back();
     } catch (err) {
-      console.error('Error adding product:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add product. Please try again.';
-      setError(errorMessage);
-      Alert.alert('Error', errorMessage);
+      setError('Failed to add product. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -333,11 +322,10 @@ export default function AddProductScreen() {
             keyboardType="numeric"
           />
           
-          <Input
-            label="Product Image URL *"
-            placeholder="Enter image URL (e.g., https://example.com/image.jpg)"
+          <ImageUpload
             value={imageUrl}
-            onChangeText={setImageUrl}
+            onImageChange={setImageUrl}
+            label="Product Image"
           />
           
           <CompanyPicker
@@ -348,11 +336,10 @@ export default function AddProductScreen() {
             placeholder="Select or create company"
           />
           
-          <Input
-            label="Company Image URL *"
-            placeholder="Enter company image URL"
+          <ImageUpload
             value={companyImageUrl}
-            onChangeText={setCompanyImageUrl}
+            onImageChange={setCompanyImageUrl}
+            label="Company Image *"
           />
           
           <Input
@@ -490,12 +477,10 @@ export default function AddProductScreen() {
                       containerStyle={styles.matrixInput}
                     />
                     
-                    <Input
-                      label={`Image URL for ${size} - ${variety} (Optional)`}
-                      placeholder="Enter image URL"
+                    <ImageUpload
                       value={matrixItem.imageUrl}
-                      onChangeText={(value) => handleMatrixChange(size, variety, 'imageUrl', value)}
-                      containerStyle={styles.matrixInput}
+                      onImageChange={(value) => handleMatrixChange(size, variety, 'imageUrl', value)}
+                      label={`Image for ${size} - ${variety} (Optional)`}
                     />
                     
                     <View style={styles.locationToggles}>
