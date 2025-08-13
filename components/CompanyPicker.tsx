@@ -106,9 +106,18 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
           style={styles.modalOverlay}
           onPress={() => setIsOpen(false)}
         >
-          <View style={styles.modalContent}>
+          <Pressable
+            style={styles.modalContent}
+            onPress={(e) => e.stopPropagation()}
+          >
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Select Company</Text>
+              <Pressable
+                style={styles.closeButton}
+                onPress={() => setIsOpen(false)}
+              >
+                <Ionicons name="close" size={20} color={colors.textLight} />
+              </Pressable>
             </View>
             
             <TextInput
@@ -134,11 +143,11 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
               >
                 <Ionicons name="add" size={16} color={colors.primary} />
                 <Text style={styles.createOptionText}>
-                  Create "{searchText}"
+                  Create &quot;{searchText}&quot;
                 </Text>
               </Pressable>
             )}
-          </View>
+          </Pressable>
         </Pressable>
       </Modal>
     </View>
@@ -190,14 +199,21 @@ const styles = StyleSheet.create({
     maxHeight: '80%',
   },
   modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+  },
+  closeButton: {
+    padding: 4,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: colors.text,
+    flex: 1,
     textAlign: 'center',
   },
   searchInput: {
