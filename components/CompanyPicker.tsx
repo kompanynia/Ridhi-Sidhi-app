@@ -106,10 +106,7 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
           style={styles.modalOverlay}
           onPress={() => setIsOpen(false)}
         >
-          <Pressable
-            style={styles.modalContent}
-            onPress={(e) => e.stopPropagation()}
-          >
+          <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Select Company</Text>
               <Pressable
@@ -147,7 +144,7 @@ export const CompanyPicker: React.FC<CompanyPickerProps> = ({
                 </Text>
               </Pressable>
             )}
-          </Pressable>
+          </View>
         </Pressable>
       </Modal>
     </View>

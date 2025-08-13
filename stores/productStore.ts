@@ -216,19 +216,33 @@ export const useProductStore = create<ProductState>((set, get) => ({
       
       set(state => ({ 
         products: [newProduct, ...state.products],
+        filteredProducts: [newProduct, ...state.filteredProducts],
         isLoading: false 
       }));
       
-      // Reapply filters
+      // Reapply current filters to include the new product if it matches
       const { currentLocation, currentCompanyFilter, currentSearchQuery } = get();
-      if (currentLocation) {
-        get().filterByLocation(currentLocation);
+      let shouldRefilter = false;
+      
+      if (currentLocation && !newProduct.locations.includes(currentLocation)) {
+        shouldRefilter = true;
       }
-      if (currentCompanyFilter) {
-        get().filterByCompany(currentCompanyFilter);
+      if (currentCompanyFilter && newProduct.company !== currentCompanyFilter) {
+        shouldRefilter = true;
       }
       if (currentSearchQuery) {
-        get().filterBySearch(currentSearchQuery);
+        const query = currentSearchQuery.toLowerCase();
+        if (!newProduct.name.toLowerCase().includes(query) && 
+            !newProduct.description.toLowerCase().includes(query)) {
+          shouldRefilter = true;
+        }
+      }
+      
+      if (shouldRefilter) {
+        // Remove the new product from filtered list if it doesn't match current filters
+        set(state => ({
+          filteredProducts: state.filteredProducts.filter(p => p.id !== newProduct.id)
+        }));
       }
     } catch (error) {
       set({ 

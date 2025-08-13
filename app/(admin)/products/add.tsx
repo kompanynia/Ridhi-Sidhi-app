@@ -7,6 +7,7 @@ import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
 import { CompanyPicker } from '@/components/CompanyPicker';
 import { ImageUpload } from '@/components/ImageUpload';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { colors } from '@/constants/colors';
 import { useProductStore } from '@/stores/productStore';
 import { Product, ProductVariation, Location, Discount, DiscountType } from '@/types';
@@ -213,7 +214,12 @@ export default function AddProductScreen() {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    console.log('Starting product submission...');
+    
+    if (!validateForm()) {
+      console.log('Form validation failed');
+      return;
+    }
     
     setIsSubmitting(true);
     setError('');
@@ -265,18 +271,49 @@ export default function AddProductScreen() {
         discount: productDiscount,
       };
       
+      console.log('Adding product to store...');
       await addProduct(newProduct);
-      Alert.alert('Success', 'Product added successfully');
-      router.back();
+      console.log('Product added successfully to store');
+      
+      // Reset form to allow adding another product
+      console.log('Resetting form...');
+      setName('');
+      setDescription('');
+      setPrice('');
+      setImageUrl('');
+      setCompany('');
+      setCompanyImageUrl('');
+      setCategory('');
+      setProductDiscountValue('');
+      setSizes(['Small']);
+      setVarieties(['Standard']);
+      setVariationMatrix({
+        'Small-Standard': {
+          price: '',
+          description: '',
+          imageUrl: '',
+          udaipur: true,
+          mungana: true,
+        }
+      });
+      setIsAvailableInUdaipur(true);
+      setIsAvailableInMungana(true);
+      
+      console.log('Form reset complete');
+      Alert.alert('Success', 'Product added successfully! You can add another product.');
     } catch (err) {
-      setError('Failed to add product. Please try again.');
+      console.error('Error adding product:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to add product. Please try again.';
+      setError(errorMessage);
+      Alert.alert('Error', errorMessage);
     } finally {
+      console.log('Submission complete, setting isSubmitting to false');
       setIsSubmitting(false);
     }
   };
 
   return (
-    <>
+    <ErrorBoundary>
       <Stack.Screen 
         options={{
           title: 'Add Product',
@@ -549,7 +586,7 @@ export default function AddProductScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
       </SafeAreaView>
-    </>
+    </ErrorBoundary>
   );
 }
 
