@@ -308,7 +308,7 @@ export default function AdminOrdersScreen() {
           </Pressable>
         </View>
 
-        <Text style={[styles.filterLabel, { marginTop: 12 }]}>Filter by Status:</Text>
+        <Text style={[styles.filterLabel, { marginTop: Platform.select({ web: 6, default: 12 }) }]}>Filter by Status:</Text>
         <View style={styles.filterOptions}>
           {(['all','pending','completed','cancelled'] as const).map(s => (
             <Pressable
@@ -324,7 +324,7 @@ export default function AdminOrdersScreen() {
           ))}
         </View>
 
-        <Text style={[styles.filterLabel, { marginTop: 12 }]}>Filter by Date:</Text>
+        <Text style={[styles.filterLabel, { marginTop: Platform.select({ web: 6, default: 12 }) }]}>Filter by Date:</Text>
         <View style={styles.filterOptions}>
           {([
             { key: 'all', label: 'All' },
@@ -399,25 +399,26 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   filterContainer: {
-    padding: 16,
+    padding: Platform.select({ web: 8, default: 16 }),
     backgroundColor: colors.white,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   filterLabel: {
-    fontSize: 16,
+    fontSize: Platform.select({ web: 14, default: 16 }),
     fontWeight: '500',
     color: colors.text,
-    marginBottom: 8,
+    marginBottom: Platform.select({ web: 4, default: 8 }),
   },
   filterOptions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: Platform.select({ web: 4, default: 8 }),
+    flexWrap: 'wrap',
   },
   filterOption: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: Platform.select({ web: 8, default: 12 }),
+    paddingVertical: Platform.select({ web: 4, default: 6 }),
+    borderRadius: Platform.select({ web: 12, default: 16 }),
     backgroundColor: colors.card,
     borderWidth: 1,
     borderColor: colors.border,
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
   },
   filterText: {
-    fontSize: 14,
+    fontSize: Platform.select({ web: 12, default: 14 }),
     color: colors.text,
     fontWeight: '500',
   },
